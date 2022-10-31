@@ -1,21 +1,5 @@
 local behavior_node = require 'behavior3.behavior_node'
 local behavior_ret = require 'behavior3.behavior_ret'
-local json = require 'json'
-
-local meta = {
-    __newindex = function(_, k)
-        error(string.format('readonly:%s', k), 2)
-    end
-}
-local function const(t)
-    setmetatable(t, meta)
-    for _, v in pairs(t) do
-        if type(v) == 'table' then
-            const(v)
-        end
-    end
-    return t
-end
 
 local trees = {}
 
@@ -25,8 +9,7 @@ function mt:init(name, tree_data)
 
     self.name = name
     self.tick = 0
-    local data = const(tree_data)
-    self.root = behavior_node.new(data.root, self)
+    self.root = behavior_node.new(tree_data.root, self)
 end
 
 function mt:run(env)
